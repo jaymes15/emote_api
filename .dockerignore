@@ -1,0 +1,9 @@
+.dumps
+.data
+.gitignore
+.github
+.idea
+.hypothesis
+docker-compose.yaml
+Dockerfile
+README.md

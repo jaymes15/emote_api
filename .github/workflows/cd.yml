@@ -1,0 +1,44 @@
+---
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - master
+      - production
+      - main
+  pull_request: []
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Make Env file
+        run: mv .sample.build.env .env
+      - name: Test
+        run: docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py test"
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Make Env file
+        run: mv .sample.build.env .env
+      - name: Lint
+        run: docker-compose run --rm app sh -c "flake8"
+  
+  isort:
+    name: Isort
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Make Env file
+        run: mv .sample.build.env .env
+      - name: Isort
+        run: docker-compose run --rm app sh -c "isort --check-only ."
