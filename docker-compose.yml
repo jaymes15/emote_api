@@ -20,6 +20,6 @@ services:
     volumes:
       - ./app:/emote_api
     depends_on: 
-      - db
+      - emote_api_db
     container_name: emote_api
 

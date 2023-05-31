@@ -1,4 +1,4 @@
-# Django, Docker template
+# Emote Care API 
 
 Written with [Django](https://www.djangoproject.com/) and [DRF](https://www.django-rest-framework.org/)
 
@@ -81,6 +81,11 @@ To run test suites:
 
 ```bash
 docker-compose run --rm emote_api sh -c "python manage.py wait_for_db && python manage.py test"
+```
+
+To run test coverage:
+```bash
+docker-compose run --rm seedfi_underwriting_api sh -c "python manage.py wait_for_db && coverage run manage.py test && coverage report"
 ```
 
 To check lint:
