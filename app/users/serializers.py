@@ -9,6 +9,18 @@ from core.models import User
 from users.utils.whitelist import is_list_allowed
 
 
+class AllUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = (
+            "first_name",
+            "last_name",
+            "profile_picture",
+            "username",
+            "created_on",
+        )
+
+
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the users object"""
 

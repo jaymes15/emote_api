@@ -1,10 +1,11 @@
 from django.core.exceptions import ValidationError
-from rest_framework import generics, permissions, status
+from rest_framework import generics, mixins, permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from users.serializers import (LoginSerializer, UserSerializer,
-                               UserUpdateSerializer)
+from core.models import User
+from users.serializers import (AllUserSerializer, LoginSerializer,
+                               UserSerializer, UserUpdateSerializer)
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -43,3 +44,16 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
             return Response(serializer.data)
         except ValidationError as err:
             return Response(data=err, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AllUserViewset(
+    viewsets.GenericViewSet,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+):
+    """Get All Users endpoint"""
+
+    serializer_class = AllUserSerializer
+    queryset = User.objects.all()
+
+    permission_classes = (permissions.IsAuthenticated,)

@@ -4,13 +4,19 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from core import models
 from core.helpers import sample_user
-from users.serializers import UserUpdateSerializer
+from users.serializers import AllUserSerializer, UserUpdateSerializer
 
 CREATE_USER_URL = reverse("users:create")
 TOKEN_URL = reverse("users:token_obtain_pair")
 REFRESH_TOKEN_URL = reverse("users:token_refresh")
 ME_URL = reverse("users:me")
+GET_ALL_USERS_URL = reverse("users:all_users-list")
+
+
+def get_get_all_users_detail_url(id):
+    return reverse("users:all_users-detail", args=[id])
 
 
 class PublicUserApiTests(TestCase):
@@ -180,3 +186,75 @@ class PrivateUserApiTests(TestCase):
         self.assertNotEqual(self.user.username, payload["username"])
         self.assertEqual(self.user.username, self.username)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+
+class TestAllUserViewset(TestCase):
+    def setUp(self) -> None:
+        self.client = APIClient()
+        self.user_1 = sample_user()
+        self.user_2 = sample_user(username="another_user")
+        self.normal_user = sample_user(username="normal_user")
+
+    def test_user_can_get_all_users(
+        self,
+    ) -> None:
+        """Test user can GET all users"""
+
+        self.client.force_authenticate(user=self.user_1)
+
+        response = self.client.get(GET_ALL_USERS_URL)
+        all_users = models.User.objects.all()
+        serializer = AllUserSerializer(all_users, many=True)
+
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(response.data, serializer.data)
+        self.assertEquals(all_users.count(), 3)
+
+    def test_retrieve(
+        self,
+    ) -> None:
+        """Test a user can GET one single user"""
+
+        self.client.force_authenticate(user=self.user_1)
+
+        url = get_get_all_users_detail_url(id=self.user_2.id)
+        response = self.client.get(url)
+        serializer = AllUserSerializer(self.user_2, many=False)
+
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(response.data, serializer.data)
+
+    def test_post_not_allowed(
+        self,
+    ) -> None:
+        """Test POST method not allowed"""
+
+        self.client.force_authenticate(user=self.user_1)
+
+        response = self.client.post(GET_ALL_USERS_URL)
+
+        self.assertEquals(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_update_not_allowed(
+        self,
+    ) -> None:
+        """Test UPDATE, PATCH method not allowed"""
+
+        self.client.force_authenticate(user=self.user_1)
+
+        url = get_get_all_users_detail_url(id=self.user_1.id)
+        response = self.client.patch(url)
+
+        self.assertEquals(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_delete_not_allowed(
+        self,
+    ) -> None:
+        """Test DELETE method not allowed"""
+
+        self.client.force_authenticate(user=self.user_1)
+
+        url = get_get_all_users_detail_url(id=self.user_1.id)
+        response = self.client.delete(url)
+
+        self.assertEquals(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
