@@ -6,6 +6,7 @@ from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.db import models
 from django.utils import timezone
+from django.db.models import Count
 
 logger = logging.getLogger(__name__)
 
@@ -79,3 +80,50 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return str(self.username)
+
+class ThreadManager(models.Manager):
+    def get_or_create_personal_thread(self, user1, user2):
+        threads = self.get_queryset().filter(thread_type='personal')
+        threads = threads.filter(users__in=[user1, user2]).distinct()
+        threads = threads.annotate(u_count=Count('users')).filter(u_count=2)
+        if threads.exists():
+            return threads.first()
+        else:
+            thread = self.create(thread_type='personal')
+            thread.users.add(user1)
+            thread.users.add(user2)
+
+            return thread
+
+    def by_user(self, user):
+        return self.get_queryset().filter(users__in=[user])
+    
+class Thread(models.Model):
+    THREAD_TYPE = (
+        ('personal', 'Personal'),
+        ('group', 'Group')
+    )
+
+    name = models.CharField(max_length=50, null=True, blank=True)
+    thread_type = models.CharField(max_length=15, choices=THREAD_TYPE, default='personal')
+    users = models.ManyToManyField(User)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = ThreadManager()
+
+    def __str__(self) -> str:
+        if self.thread_type == 'personal' and self.users.count() == 2:
+            return f'{self.users.first()} and {self.users.last()}'
+        return f'{self.name}'
+
+
+class Message(models.Model):
+    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField(blank=False, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f'From <Thread - {self.thread}>'
