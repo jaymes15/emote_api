@@ -67,6 +67,5 @@ RUN chmod -R 777 /vol/web
 
 ENV PATH="/scripts:/py/bin:$PATH"
 
-USER emote_api
 
 CMD ["run.sh"]
