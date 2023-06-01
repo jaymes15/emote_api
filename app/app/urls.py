@@ -21,8 +21,8 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-     path(
+    path("admin/", admin.site.urls),
+    path(
         "v1/api_docs/",
         include_docs_urls(
             title="Emote API",
@@ -38,5 +38,7 @@ urlpatterns = [
         ),
         name="api_schema",
     ),
-] + (static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT))
+] + (
+    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+)
