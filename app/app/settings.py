@@ -157,6 +157,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+AUTH_USER_MODEL = "core.User"
+
 if os.environ.get("IS_CLOUDINARY", False):
     CLOUDINARY_STORAGE = {
         "CLOUD_NAME": get_env_variable("CLOUDINARY_CLOUD_NAME"),
