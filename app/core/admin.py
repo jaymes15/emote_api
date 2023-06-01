@@ -8,3 +8,5 @@ for model in models:
         admin.site.register(model)
     except admin.sites.AlreadyRegistered:
         pass
+
+admin.site.site_header = "Emote Care Admin API"

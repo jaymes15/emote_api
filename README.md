@@ -120,3 +120,8 @@ isort:
 ```bash
 docker-compose run --rm emote_api sh -c "isort ."
 ```
+
+## API Documentation
+
+API documentation for this project is available at: `v1/api_docs/`
+API documentation schema for this project is available at: `v1/api/schema/`
