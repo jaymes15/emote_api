@@ -83,3 +83,29 @@ class TestThreadModel(TestCase):
         thread_query = models.Thread.objects.last()
 
         self.assertEqual(str(thread), str(thread_query))
+
+
+class TestMessageModel(TestCase):
+    def setUp(self) -> None:
+        self.user_1 = sample_user(username="user_1")
+        self.user_2 = sample_user(username="user_2")
+
+    def test_model_can_be_created(self) -> None:
+        """Test Message model object can be created"""
+        message = utils.sample_create_message(
+            user_1=self.user_1,
+            user_2=self.user_2,
+        )
+        message_query = models.Message.objects.last()
+
+        self.assertEqual(message, message_query)
+
+    def test_str(self) -> None:
+        """Test Message model str method"""
+        message = utils.sample_create_message(
+            user_1=self.user_1,
+            user_2=self.user_2,
+        )
+        message_query = models.Message.objects.last()
+
+        self.assertEqual(str(message), str(message_query))
