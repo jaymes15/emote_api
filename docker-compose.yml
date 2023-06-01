@@ -22,4 +22,10 @@ services:
     depends_on: 
       - emote_api_db
     container_name: emote_api
+  
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+    container_name: emote_api_redis
 
