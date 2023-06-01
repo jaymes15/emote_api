@@ -6,6 +6,8 @@ from django.db import IntegrityError
 from django.test import TestCase
 
 from core import models
+from core.helpers import sample_user
+from core.tests import utils
 
 
 class ImageFilePathTest(TestCase):
@@ -55,3 +57,29 @@ class UserModelTests(TestCase):
                 password=self.password,
                 username=self.username,
             )
+
+
+class TestThreadModel(TestCase):
+    def setUp(self) -> None:
+        self.user_1 = sample_user(username="user_1")
+        self.user_2 = sample_user(username="user_2")
+
+    def test_model_can_be_created(self) -> None:
+        """Test Thread model object can be created"""
+        thread = utils.sample_create_thread(
+            user_1=self.user_1,
+            user_2=self.user_2,
+        )
+        thread_query = models.Thread.objects.last()
+
+        self.assertEqual(thread, thread_query)
+
+    def test_str(self) -> None:
+        """Test Thread model str method"""
+        thread = utils.sample_create_thread(
+            user_1=self.user_1,
+            user_2=self.user_2,
+        )
+        thread_query = models.Thread.objects.last()
+
+        self.assertEqual(str(thread), str(thread_query))
