@@ -23,6 +23,7 @@ from rest_framework.schemas import get_schema_view
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("v1/users/", include("users.urls")),
+    path("v1/chats/", include("chats.urls")),
     path(
         "v1/api_docs/",
         include_docs_urls(

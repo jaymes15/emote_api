@@ -19,6 +19,13 @@ class AllUserSerializer(serializers.ModelSerializer):
             "username",
             "created_on",
         )
+        read_only_fields = (
+            "first_name",
+            "last_name",
+            "profile_picture",
+            "username",
+            "created_on",
+        )
 
 
 class UserSerializer(serializers.ModelSerializer):
