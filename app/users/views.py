@@ -57,3 +57,6 @@ class AllUserViewset(
     queryset = User.objects.all()
 
     permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return User.objects.all().exclude(id=self.request.user.id)

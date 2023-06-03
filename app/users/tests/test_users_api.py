@@ -203,12 +203,12 @@ class TestAllUserViewset(TestCase):
         self.client.force_authenticate(user=self.user_1)
 
         response = self.client.get(GET_ALL_USERS_URL)
-        all_users = models.User.objects.all()
+        all_users = models.User.objects.all().exclude(id=self.user_1.id)
         serializer = AllUserSerializer(all_users, many=True)
 
         self.assertEquals(response.status_code, status.HTTP_200_OK)
         self.assertEquals(response.data, serializer.data)
-        self.assertEquals(all_users.count(), 3)
+        self.assertEquals(all_users.count(), 2)
 
     def test_retrieve(
         self,
