@@ -85,7 +85,7 @@ docker-compose run --rm emote_api sh -c "python manage.py wait_for_db && python 
 
 To run test coverage:
 ```bash
-docker-compose run --rm seedfi_underwriting_api sh -c "python manage.py wait_for_db && coverage run manage.py test && coverage report"
+docker-compose run --rm emote_api sh -c "python manage.py wait_for_db && coverage run manage.py test && coverage report"
 ```
 
 To check lint:
