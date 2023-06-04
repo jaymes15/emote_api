@@ -30,6 +30,15 @@ class ChatView(APIView):
                 me, other_user
             )
             messages = models.Message.objects.filter(thread=thread_obj.id)
+
+            if not messages.exists():
+                models.Message.objects.create(
+                    sender=self.request.user,
+                    text="This is the start of a new message",
+                    thread=thread_obj,
+                    is_bot=True
+                )
+            messages = models.Message.objects.filter(thread=thread_obj.id)
             serializer = MessageSerializer(messages, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as error:

@@ -21,6 +21,7 @@ class MessageSerializer(serializers.ModelSerializer):
             "text",
             "created_at",
             "updated_at",
+            "is_bot"
         )
         read_only_fields = (
             "id",
@@ -29,4 +30,5 @@ class MessageSerializer(serializers.ModelSerializer):
             "text",
             "created_at",
             "updated_at",
+            "is_bot"
         )
