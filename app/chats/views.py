@@ -36,7 +36,7 @@ class ChatView(APIView):
                     sender=self.request.user,
                     text="This is the start of a new message",
                     thread=thread_obj,
-                    is_bot=True
+                    is_bot=True,
                 )
             messages = models.Message.objects.filter(thread=thread_obj.id)
             serializer = MessageSerializer(messages, many=True)
