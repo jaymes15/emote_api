@@ -76,6 +76,7 @@ jobs:
         CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
         CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
         IS_CLOUDINARY: ${{ secrets.IS_CLOUDINARY }}
+        
         REDIS_NETWORK: ${{ secrets.STAGING_REDIS_NETWORK }}
 
       run: heroku container:login && sh ./heroku_env.sh
