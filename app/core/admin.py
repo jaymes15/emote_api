@@ -9,4 +9,4 @@ for model in models:
     except admin.sites.AlreadyRegistered:
         pass
 
-admin.site.site_header = "Emote Care Admin API"
+admin.site.site_header = "Chat Admin API"

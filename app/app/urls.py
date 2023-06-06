@@ -27,15 +27,15 @@ urlpatterns = [
     path(
         "v1/api_docs/",
         include_docs_urls(
-            title="Emote API",
-            description="Emote API documentation",
+            title="Chat API",
+            description="Chat API documentation",
         ),
     ),
     path(
         "v1/api/schema/",
         get_schema_view(
-            title="Emote API Schema",
-            description="Emote API schema",
+            title="Chat API Schema",
+            description="Chat API schema",
             version="1.0.0",
         ),
         name="api_schema",
