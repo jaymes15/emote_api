@@ -1,6 +1,19 @@
 FROM python:3.8-alpine
 
 ENV PYTHONUNBUFFERED 1
+ENV DEBUG=True
+ENV ALLOWED_HOSTS=*
+ENV SECRET_KEY=sample_scret_key
+ENV PAPER_TRAIL_ADDRESS=sample.com
+ENV PAPER_TRAIL_PORT=1234
+ENV DB_HOST=emote_api_db
+ENV DB_NAME=app
+ENV DB_USER=postgres
+ENV DB_PASS=supersecretpassword
+ENV DB_PORT=5432
+ENV IMAGE_PATH=uploads/images/
+ENV REDIS_NETWORK=emote_api_redis
+ENV REDIS_PORT=6379
 
 WORKDIR /emote_api
 
@@ -67,6 +80,10 @@ RUN chmod -R 777 /vol/web
 
 ENV PATH="/scripts:/py/bin:$PATH"
 
+RUN python manage.py collectstatic --noinput
 
 CMD ["run.sh"]
 
+EXPOSE 8000
+
+CMD python manage.py runserver 0.0.0.0:$PORT

@@ -42,3 +42,41 @@ jobs:
         run: mv .sample.build.env .env
       - name: Isort
         run: docker-compose run --rm emote_api sh -c "isort --check-only ."
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    #needs: [test,isort,linting]
+   
+    if: github.ref == 'refs/heads/master'
+    steps:
+
+    - uses: actions/checkout@v1
+    - name: Login to Heroku Container registry
+      env: 
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:login 
+    - name: Build and push
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web 
+    - name: Release
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web
+    - name: Heroku app config
+      env: 
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        DEBUG: ${{ secrets.DEBUG_STAGING }}
+        SETTINGS_MODULE: ${{ secrets.SETTINGS_MODULE_STAGING }}
+        HEROKU_APP: ${{ secrets.HEROKU_APP_STAGING }}
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_STAGING }}
+        ALLOWED_HOST: ${{ secrets.ALLOWED_HOST_STAGING }}
+        CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+        CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+        CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+        IS_CLOUDINARY: ${{ secrets.IS_CLOUDINARY }}
+        REDIS_NETWORK: ${{ secrets.STAGING_REDIS_NETWORK }}
+
+      run: heroku container:login && sh ./heroku_env.sh
+  

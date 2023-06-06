@@ -20,3 +20,6 @@ PyJWT>=2.0.1,<2.1.0
 channels==3.0.5
 channels-redis==4.0.0
 daphne==3.0.2
+dj-database-url>=0.3.0,<0.4.0
+dj-static>=0.0.6,<0.1.0
+python-decouple>=3.4,<4.0
