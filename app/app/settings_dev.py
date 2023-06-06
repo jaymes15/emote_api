@@ -12,9 +12,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [
-                (get_env_variable("UPSTASH_REDIS_URL"))
-            ],
+            "hosts": [(get_env_variable("UPSTASH_REDIS_URL"))],
         },
     },
 }
